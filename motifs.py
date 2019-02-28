@@ -21,7 +21,18 @@ def main():
   count = motifCount(motifs_1)
   profile = motifProfile(count, len(motifs_1))
   consensus = motifConsensus(motifs_1)
-  print(consensus)
+  score = motifScore(motifs_1)
+  print(score)
+
+def motifScore(motifs):
+  consensus = motifConsensus(motifs)
+  length = len(motifs[0])
+  score = 0
+  for i in range(length):
+    for motif in motifs:
+      if motif[i] != consensus[i]:
+        score += 1
+  return score
 
 def motifConsensus(motifs):
   count = motifCount(motifs)
@@ -55,18 +66,6 @@ def motifProfile(count, numRows):
       profile[key][i] = count[key][i] / numRows
   return profile
       
-
-'''
-def count(motifs):
-  matrix = initializeMatrix(motifs[0])
-  for i in range(len(motifs)):
-    motif = motifs[i]
-    for j in range(len(motif)):
-      symbol = motif[j]
-      matrix[symbol][j] += 1
-  return matrix
-'''
-
 def initializeMatrix(motif):
   matrix = {}
   keys = 'ACGT'
