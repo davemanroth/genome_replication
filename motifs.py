@@ -20,11 +20,24 @@ def main():
   ]
   count = motifCount(motifs_1)
   profile = motifProfile(count, len(motifs_1))
-  print(profile)
+  consensus = motifConsensus(motifs_1)
+  print(consensus)
 
-def profile(counts):
-  return motifStats(motifs)
+def motifConsensus(motifs):
+  count = motifCount(motifs)
+  length = len(motifs[0])
+  consensus = ""
+  for i in range(length):
+    freqLet = ""
+    highestNum = 0
+    for sym in "ACGT":
+      if count[sym][i] > highestNum:
+        highestNum = count[sym][i]
+        freqLet = sym
+    consensus += freqLet
+  return consensus
 
+# Assembles counts for each nucleotide
 def motifCount(motifs):
   count = initializeMatrix(motifs[0])
   for i in range(len(motifs)):
@@ -34,6 +47,7 @@ def motifCount(motifs):
       count[symbol][j] += 1
   return count
 
+# Computes count ratios of each nucleotide
 def motifProfile(count, numRows):
   profile = count
   for key, row in count.items(): 
