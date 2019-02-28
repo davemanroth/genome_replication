@@ -1,0 +1,45 @@
+#!/usr/local/bin/pyvenv-3.7 python3
+
+def main():
+  # print('AGGTCGGCTTAGCTACCAGT\n')
+  print(complement(reverse('TTGTGTC')))
+  genome_1= 'ATCAATGATCAACGTAAGCTTCTAAGCATGATCAAGGTGCTCACACAGTTTATCCACAACCTGAGTGGATGACATCAAGATAGGTCGTTGTATCTCCTTCCTCTCGTACTCTCATGACCACGGAAAGATGATCAAGAGAGGATGATTTCTTGGCCATATCGCAATGAATACTTGTGACTTGTGCTTCCAATTGACATCTTCAGCGCCATATTGCGCTGGCCAAGGTGACGGAGCGGGATTACGAAAGCATGATCATGGCTGTTGTTCTGTTTATCTTGTTTTGACTGAGACTTGTTAGGATAGACGGTTTTTCATCACTGACTAGCCAAAGCCTTACTCTGCCTGACATCGACCGTAAATTGATAATGAATTTACATGCTTCCGCGACGATTTACCTCTTGATCATCGATCCGATTGAAGATCTTCAATTGTTAATTCTCTTGCCTCGACTCATAGCCATGATGAGCTCTTGATCATGTTTCCTTAACCCTCTATTTTTTACGGAAGAATGATCAAGCTGCTGCTCTTGATCATCGTTTC'
+
+  genome_2 = 'AACTCTATACCTCCTTTTTGTCGAATTTGTGTGATTTATAGAGAAAATCTTATTAACTGAAACTAAAATGGTAGGTTTGGTGGTAGGTTTTGTGTACATTTTGTAGTATCTGATTTTTAATTACATACCGTATATTGTATTAAATTGACGAACAATTGCATGGAATTGAATATATGCAAAACAAACCTACCACCAAACTCTGTATTGACCATTTTAGGACAACTTCAGGGTGGTAGGTTTCTGAAGCTCTCATCAATAGACTATTTTAGTCTTTACAAACAATATTACCGTTCAGATTCAAGATTCTACAACGCTGTTTTAATGGGCGTTGCAGAAAACTTACCACCTAAAATCCAGTATCCAAGCCGATTTCAGAGAAACCTACCACTTACCTACCACTTACCTACCACCCGGGTGGTAAGTTGCAGACATTATTAAAAACCTCATCAGAAGCTTGTTCAAAAATTTCAATACTCGAAACCTACCACCTGCGTCCCCTATTATTTACTACTACTAATAATAGCAGTATAATTGATCTGA'
+
+  pattern = 'ATGATCAAG'
+  # print(patternMatching(pattern, genome_2))
+  # patternMatching(pattern, genome)
+  # pattern_length = len(pattern) - 1
+  # print(genome[0:len(pattern) + 1])
+  # print(len(pattern) - 1)
+
+def patternMatching(pattern, genome):
+  # positions = []
+  count = 0
+  rev_comp_pattern = complement( reverse(pattern))
+  for i in range(len(genome) - len(pattern) + 1):
+    # print(genome[i:i + len(pattern)])
+    if (genome[i:i + len(pattern)] == pattern):
+    # if (genome[i:i + len(pattern)] == pattern) or (genome[i:i + len(pattern)] == rev_comp_pattern):
+      # positions.append(i)
+      count += 1
+  # return positions
+  return count
+
+def reverse(pattern):
+  reversed = ''
+  count = len(pattern) - 1
+  for i in range(len(pattern)):
+    reversed += pattern[count]
+    count-= 1
+  return reversed
+
+def complement(pattern):
+  complement = ''
+  key = {'A' : 'T', 'T' : 'A', 'C' : 'G', 'G' : 'C' }
+  for i in range(len(pattern)):
+    complement += key[pattern[i]]
+  return complement
+
+if __name__ == '__main__' : main()
