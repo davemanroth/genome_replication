@@ -58,11 +58,45 @@ def main():
   text_5 = "AACCGGTT"
   text_6 = "TTACCATGGGACCGCTGACTGATTTCTGGCGTCAGCGTGATGCTGGTGTGGATGACATTCCGGTGCGCTTTGTAAGCAGAGTTTA"
 
+  dna_1 = [
+    "GGCGTTCAGGCA",
+    "AAGAATCAGTCA",
+    "CAAGGAGTTCGC",
+    "CACGTCAATCAC",
+    "CAATAATATTCG"
+  ]
+
   prob = probability(text_1, profile_1)
   size = len(profile_6["A"])
 
   profile = profileMostProbablePattern(text_6, size, profile_6)
-  print(profile)
+  result = greedyMotifSearch(dna_1, 3, 5)
+  print(result)
+  
+# Given set of DNA strands, finds most closely related kmers 
+def greedyMotifSearch(dna, k, t):
+  bestMotifs = initializeBestMotifs(dna, k)
+  firstStrand = dna[0]
+  strandLength = len(firstStrand)
+  for i in range(strandLength - k + 1):
+    motifs = []
+    motifs.append(firstStrand[i:k + i])
+    for j in range(1, t):
+      count = motifCount(motifs)
+      profile = motifProfile(count, len(motifs))
+      bestMatch = profileMostProbablePattern(dna[j], k, profile)
+      motifs.append(bestMatch)
+    if motifScore(motifs) < motifScore(bestMotifs):
+      bestMotifs = motifs
+  return bestMotifs
+      
+# Initializing best motifs list simply to the first kmer in each DNA strand
+def initializeBestMotifs(dna, k):
+  bestMotifs = []
+  for i in range(len(dna)):
+    currStrand = dna[i]
+    bestMotifs.append(currStrand[0: k])
+  return bestMotifs
 
 def profileMostProbablePattern(text, size, profile):
   boundary = len(text) - size + 1
@@ -75,8 +109,6 @@ def profileMostProbablePattern(text, size, profile):
       probablePattern = pattern
       currHighestProb = prob 
   return probablePattern
-'''
-'''
   
 def probability(text, profile):
   probability = 1
@@ -86,4 +118,54 @@ def probability(text, profile):
     probability *= profile[sym][i]
   return probability
 
-if __name__ == "__main__": main()
+def motifScore(motifs):
+  consensus = motifConsensus(motifs)
+  length = len(motifs[0])
+  score = 0
+  for i in range(length):
+    for motif in motifs:
+      if motif[i] != consensus[i]:
+        score += 1
+  return score
+
+def motifConsensus(motifs):
+  count = motifCount(motifs)
+  length = len(motifs[0])
+  consensus = ""
+  for i in range(length):
+    freqLet = ""
+    highestNum = 0
+    for sym in "ACGT":
+      if count[sym][i] > highestNum:
+        highestNum = count[sym][i]
+        freqLet = sym
+    consensus += freqLet
+  return consensus
+
+# Assembles counts for each nucleotide
+def motifCount(motifs):
+  count = initializeMatrix(motifs[0])
+  for i in range(len(motifs)):
+    motif = motifs[i]
+    for j in range(len(motif)):
+      symbol = motif[j]
+      count[symbol][j] += 1
+  return count
+
+# Computes count ratios of each nucleotide
+def motifProfile(count, numRows):
+  profile = count
+  for key, row in count.items(): 
+    for i in range(len(row)):
+      profile[key][i] = count[key][i] / numRows
+  return profile
+      
+def initializeMatrix(motif):
+  matrix = {}
+  keys = 'ACGT'
+  for i in range(len(keys)):
+    symbol = keys[i]
+    matrix[symbol] = [0] * len(motif)
+  return matrix
+
+if __name__ == '__main__': main()

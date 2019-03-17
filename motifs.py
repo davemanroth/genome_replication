@@ -22,7 +22,7 @@ def main():
   profile = motifProfile(count, len(motifs_1))
   consensus = motifConsensus(motifs_1)
   score = motifScore(motifs_1)
-  print(score)
+  print(profile)
 
 def motifScore(motifs):
   consensus = motifConsensus(motifs)
